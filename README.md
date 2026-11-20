@@ -8,5 +8,5 @@ brew install seshness/herdr/herdr-core
 ```
 
 Update with `brew upgrade herdr-core` (`hc update` defers to Homebrew).
-A daily workflow points the formula at upstream's latest release;
+A weekly workflow points the formula at upstream's latest release;
 `scripts/bump` does the same by hand.

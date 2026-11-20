@@ -1,9 +1,9 @@
-# Follow upstream: daily, point the formula at releases.herdr.dev's latest herdr-core.
+# Follow upstream: weekly, point the formula at releases.herdr.dev's latest herdr-core.
 name: bump
 
 on:
   schedule:
-    - cron: "17 6 * * *"
+    - cron: "17 6 * * 1"
   workflow_dispatch:
 
 permissions:

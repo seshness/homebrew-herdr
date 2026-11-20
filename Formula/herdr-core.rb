@@ -1,0 +1,52 @@
+class HerdrCore < Formula
+  desc "Terminal runtime for coding agents"
+  homepage "https://github.com/herdrdev/herdr-core"
+  version "0.1.21"
+  license "Apache-2.0"
+
+  on_macos do
+    on_arm do
+      url "https://releases.herdr.dev/core/0.1.21/herdr-core-macos-aarch64.tar.gz"
+      sha256 "1ab38dd9270f63a8f794d6d60e8702eb0d1c85a72bda85d735e5eea43f05ffed"
+    end
+    on_intel do
+      url "https://releases.herdr.dev/core/0.1.21/herdr-core-macos-x86_64.tar.gz"
+      sha256 "e377e1d342cddce0346da5b2f3c281b9701e4731c00024c7c5028265e77a217f"
+    end
+  end
+
+  on_linux do
+    on_arm do
+      url "https://releases.herdr.dev/core/0.1.21/herdr-core-linux-aarch64.tar.gz"
+      sha256 "e844a2bfab48a226097679d076bc83042fe57fccef5387ef802e5b24e78b529a"
+    end
+    on_intel do
+      url "https://releases.herdr.dev/core/0.1.21/herdr-core-linux-x86_64.tar.gz"
+      sha256 "78424755c10a40dde38a0bdb55c20ac19706e9ae05ed68fc2acf1fcff0d941c1"
+    end
+  end
+
+  def install
+    if OS.mac?
+      # The signed, notarized app bundle: macOS names it (not "herdr-core")
+      # in notification and Local Network prompts.
+      libexec.install "Herdr Core.app"
+      bin.install_symlink libexec/"Herdr Core.app/Contents/MacOS/herdr-core"
+    else
+      bin.install "herdr-core"
+    end
+    bin.install_symlink "herdr-core" => "hc"
+    prefix.install "THIRD-PARTY-NOTICES"
+  end
+
+  def caveats
+    <<~EOS
+      hc updates through Homebrew: `brew upgrade herdr-core`, then `hc server restart`
+      to move a running core onto the new binary (running terminals are kept).
+    EOS
+  end
+
+  test do
+    assert_match version.to_s, shell_output("#{bin}/hc --version")
+  end
+end

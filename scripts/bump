@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+"""Point Formula/herdr-core.rb at upstream's latest release (releases.herdr.dev/core/latest.json)."""
+import json, pathlib, re, urllib.request
+
+formula = pathlib.Path(__file__).resolve().parent.parent / "Formula/herdr-core.rb"
+req = urllib.request.Request("https://releases.herdr.dev/core/latest.json", headers={"User-Agent": "homebrew-herdr-bump"})
+latest = json.load(urllib.request.urlopen(req))
+text = formula.read_text()
+text = re.sub(r'version "[^"]+"', f'version "{latest["version"]}"', text, count=1)
+for target, entry in latest["targets"].items():
+    # Each url line is followed by its sha256 line.
+    text = re.sub(rf'url "[^"]*/herdr-core-{target}\.tar\.gz"\n(\s*)sha256 "[0-9a-f]+"',
+                  lambda m: f'url "{entry["url"]}"\n{m.group(1)}sha256 "{entry["sha256"]}"', text)
+formula.write_text(text)
+print(latest["version"])

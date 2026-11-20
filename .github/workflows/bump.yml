@@ -1,0 +1,24 @@
+# Follow upstream: daily, point the formula at releases.herdr.dev's latest herdr-core.
+name: bump
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: bump
+        run: echo "version=$(python3 scripts/bump)" >> "$GITHUB_OUTPUT"
+      - run: |
+          git diff --quiet && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "herdr-core ${{ steps.bump.outputs.version }}"
+          git push
